@@ -1,37 +1,56 @@
 from Arbol_buscador_pdf import Tree
 import PyPDF2
 
-archivos = ['prueba.pdf', 'prueba2.pdf']
+archivos = ['pruebas/prueba.pdf', 'pruebas/prueba2.pdf']
 palabras = []
 
 for i in archivos:
     with open(i, 'rb') as file:
         abrir = PyPDF2.PdfReader(file)
-
         numero_paginas = len(abrir.pages)
 
         for j in range(numero_paginas):
             pagina = abrir.pages[j]
 
             texto = pagina.extract_text() #texto a colocar en el arbol
+
             palabras.append(texto.lower())
+            arbol = Tree(palabras[0])
+
+
+n = 0
+d = 1
+while n != numero_paginas+1:
+    print(f"Documento No.{d}:")
+    print(palabras[n])
+    n += 1
+    d += 1
+
 
 while True:
-    menu = input("*****Menú Principal*****\nA. Ver todo el contenido de los archivos"
-                 "\nB. Buscar un dato\n Elija su opción: ").lower()
+
+    menu = input("*****Menú Principal*****\
+    \nA. Colocar los datos al árbol\nB. Buscar un dato\n Elija su opción: ").lower()
     while menu == "a":
-        n = 0
-        d = 1
-        while n != numero_paginas+1:
-            print(f"Documento No.{d}:")
-            print(palabras[n])
-            n += 1
-            d += 1
+
         break
+
     while menu == "b":
-        numero_arbol = int(input("Ingrese el Número del árbol al que quiere buscar un dato: "))
+        i = 1
+        while palabras is not None:
+            arbol.agregar(input(palabras[i]))
+            print(f"{palabras[i]} fue agregado")
+            i += 1
+        print("* -* -* -* Datos agregados correctamente *- *- *- *")
 
-
+        break
+    while menu == "c":
+        numero_arbol = input("Ingrese el dato que desea buscar: ")
+        a = arbol.busqueda(numero_arbol)
+        if a is None:
+            print(f"{numero_arbol} no existe")
+        else:
+            print(f"{numero_arbol} se encuentra en el árbol")
 
         break
 
