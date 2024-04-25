@@ -38,47 +38,53 @@ class Tree:
     def busqueda(self, buscar):
         return self.buscar_recursivo(self.raiz, buscar)
 
-def read_pdf(filename):
-    text = ''
-    with open(filename, 'rb') as file:
-        reader = PyPDF2.PdfReader(file)
-        num_pages = len(reader.pages)
-        for page_num in range(num_pages):
-            page = reader.pages[page_num]
-            text += page.extract_text()
-    return text
+def leer_pdf(archivo):
+    texto = ''
+    with open(archivo, 'rb') as file:
+        lector = PyPDF2.PdfReader(file)
+        num_pag = len(lector.pages)
+        for i in range(num_pag):
+            pagina = lector.pages[i]
+            texto += pagina.extract_text()
+    return texto
 
-def import_pdf(tree):
-    filename = input("Enter the name of the PDF file to import: ")
-    if filename:
-        text = read_pdf(filename)
-        for word in text.split():
-            tree.agregar(word)
-        print("PDF imported successfully.")
+def importar_pdf(arbol):
+    try:
+        nombre_del_archivo = input("Ingrese el nombre del archivo PDF (Ejemplo: pruebas/prueba.pdf): ")
+        if nombre_del_archivo:
+            texto = leer_pdf(nombre_del_archivo)
+            for j in texto.split():
+                arbol.agregar(j)
+            print("* -* -* -* Archivo importado correctamente *- *- *- *")
+    except FileNotFoundError:
+        print("\033[1;38;2;215;0;0mNo existe un archivo con ese nombre, asegurese que se encuentra en la carpeta llamada 'pruebas'\033[0;m")
 
-def search_word(tree):
-    word = input("Enter a word to search: ")
-    result = tree.busqueda(word)
-    if result:
-        print(f"'{word}' found in the PDF.")
+def buscar_dato(arbol):
+    dato = input("Ingrese el dato a buscar: ")
+    resultado = arbol.busqueda(dato)
+    if resultado:
+        print(f"El '{dato}' fue encontrado en el PDF.")
     else:
-        print(f"'{word}' not found in the PDF.")
+        print(f"'{dato}' no está en el PDF.")
 
-if __name__ == "__main__":
-    tree = Tree("")  # Árbol vacío para iniciar
-    while True:
-        print("\nMenu:")
-        print("1. Import PDF")
-        print("2. Search Word")
-        print("3. Exit")
-        choice = input("Enter your choice: ")
-        if choice == "1":
-            import_pdf(tree)
-        elif choice == "2":
-            search_word(tree)
-        elif choice == "3":
-            print("Exiting program.")
+
+arbolito = Tree("")  # Árbol vacío para iniciar
+
+while True:
+
+    menu = input("*****Menú Principal*****\
+    \nA. Importar PDF\nB. Buscar un dato\n Elija su opción: ").lower()
+    while menu == "a":
+        importar_pdf(arbolito)
+        break
+
+    while menu == "b":
+        buscar_dato(arbolito)
+        break
+
+    Continuar = input("\033[1;38;2;203;231;0m¿Desea continuar con el programa?\033[0;m\n"+"\033[1;38;2;162;233;29mS\033[0;m" + "/" + "\033[1;38;2;215;0;0mN \033[0;m").lower()
+    if Continuar == "n":
+            print("\033[1;38;2;231;0;95mPrograma Finalizado\033[0;m\n")
             break
-        else:
-            print("Invalid choice. Please enter a valid option.")
+
 
